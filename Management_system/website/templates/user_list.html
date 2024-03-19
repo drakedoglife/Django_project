@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px">
+            <div><a href="/user/add/" class="btn btn-success" aria-hidden="true">
+                <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+                新建用户
+            </a></div>
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-align-left"></span>
+                用户列表
+            </div>
+
+            <!-- Table -->
+            <table class="table table-bodered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>密码</th>
+                    <th>年龄</th>
+                    <th>余额</th>
+                    <th>入职时间</th>
+                    <th>性别</th>
+                    <th>所属部门</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in queryset %}
+                    <tr>
+                        <th>{{ item.id }}</th>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.password }}</td>
+                        <td>{{ item.age }}</td>
+                        <td>{{ item.account }}</td>
+                        <!--模板中不能给函数加()，因此时间处理以及gender处理如下-->
+                        <td>{{ item.onboarding_time|date:"Y-m-d" }}</td>
+                        <td>{{ item.get_gender_display }}</td>
+                        <td>{{ item.depart.title }}</td>
+                        <td>
+                            <a href="{% url 'user_edit' item.id %}" class="btn btn-primary btn-xs">编辑</a>
+                            <a href="{% url 'user_delete' item.id %}" class="btn btn-danger btn-xs">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="clearfix">
+            <ul class="pagination">
+                {{ page_string }}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

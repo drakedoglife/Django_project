@@ -17,10 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from website.views import depart, pretty, user
+from website.views import depart, pretty, user, admin
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    # path("admin/", admin.site.urls),
     # 部门管理
     path("depart/list/", depart.depart_list),
     path("depart/add/", depart.depart_add),
@@ -43,4 +43,11 @@ urlpatterns = [
     path("pretty/add/", pretty.pretty_add, name="pretty_add"),
     path("pretty/<int:nid>/edit/", pretty.pretty_edit, name="pretty_edit"),
     path("pretty/<int:nid>/delete/", pretty.pretty_delete, name="pretty_delete"),
+
+    # 管理员管理
+    path("admin/list/", admin.admin_list, name="admin_list"),
+    path("admin/add/", admin.admin_add, name="admin_add"),
+    path("admin/<int:nid>/edit", admin.admin_edit, name="admin_edit"),
+    path("admin/<int:nid>/delete", admin.admin_delete, name="admin_delete"),
+    path("admin/<int:nid>/reset", admin.admin_reset, name="admin_reset")
 ]

@@ -5,7 +5,7 @@
 # @File    : pretty.py
 # @Description : prettyNum视图函数
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from website import models
 from website.utils.pagenation import Pagination
 from website.utils.form import PrettyModelForm, PrettyEditModelForm
@@ -46,7 +46,7 @@ def pretty_add(request):
     form = PrettyModelForm(data=request.POST)
     if form.is_valid():
         form.save()
-        return redirect('/pretty/list/')
+        return redirect(reverse('pretty_list'))
 
     return render(request, 'pretty_add.html', {'form': form})
 

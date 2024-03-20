@@ -5,11 +5,12 @@
 # @File    : form.py
 # @Description : 这个文件用来存储form
 
-sfrom website import models
+from website import models
 from django import forms
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from website.utils.bootstrapform import BootstrapForm
+from website.utils.encrypt import md5
 
 
 # ModelForm实例
@@ -90,3 +91,70 @@ class PrettyEditModelForm(BootstrapForm):
             raise ValidationError("手机号已存在")
         # 验证通过后返回
         return txt_mobile
+
+
+class AdminModelForm(BootstrapForm):
+    """adminModelForm"""
+    confirm_password = forms.CharField(max_length=64, label='确认密码', widget=forms.PasswordInput)
+
+    class Meta:
+        model = models.Admin
+        fields = ['username', 'password', 'confirm_password']
+        widgets = {
+            'password': forms.PasswordInput(render_value=True)
+        }
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        # MD5加密
+        return md5(password)
+
+    def clean_confirm_password(self):
+        password = self.cleaned_data['password']
+        confirm_password = md5(self.cleaned_data['confirm_password'])
+        if password != confirm_password:
+            raise ValidationError("两次密码输入不一致")
+
+        # 返回什么，什么就保存到数据库
+        return confirm_password
+
+
+def is_password_valid(nid, password) -> bool:
+    md5_password = md5(password)
+    return models.Admin.objects.filter(id=nid, password=md5_password).exists()
+
+
+class AdminResetModelForm(AdminModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AdminResetModelForm, self).__init__(*args, **kwargs)
+        self.password = 0
+
+    class Meta:
+        model = models.Admin
+        fields = ['password', 'confirm_password']
+        widgets = {
+            'password': forms.PasswordInput(render_value=True)
+        }
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+
+        self.password = password
+        # 去数据库校验新密码和当前密码是否一致
+        if is_password_valid(nid=self.instance.pk, password=password):
+            raise ValidationError("新密码不能与当前密码相同")
+
+        return md5(password)
+
+    def clean_confirm_password(self):
+        if is_password_valid(nid=self.instance.pk, password=self.password):
+            raise ValidationError("新密码不能与当前密码相同")
+        else:
+            password = self.cleaned_data['password']
+            confirm_password = md5(self.cleaned_data['confirm_password'])
+
+            if password != confirm_password:
+                raise ValidationError("两次密码输入不一致")
+
+            # 返回什么，什么就保存到数据库
+            return confirm_password

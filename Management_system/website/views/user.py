@@ -5,7 +5,7 @@
 # @File    : user.py
 # @Description : userInfo视图函数
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from website import models
 from website.utils.pagenation import Pagination
 from website.utils.form import UserModelForm
@@ -62,7 +62,7 @@ def user_edit(request, nid):
         # 默认保存的是用户输入的数据
         # 若想保存用户输入以外的值，只需 form.instance.字段名 = 值
         form.save()
-        return redirect('/user/list/')
+        return redirect(reverse('user_list'))
 
     return render(request, "user_edit.html", {"form": form})
 

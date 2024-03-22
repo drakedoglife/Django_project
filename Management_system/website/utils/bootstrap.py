@@ -2,18 +2,15 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2024/3/19 20:18
 # @Author  : 我的名字
-# @File    : bootstrapform.py
+# @File    : bootstrap.py
 # @Description : 这个函数是用来快速生成ModelForm的
 
 from django import forms
 
 
-class BootstrapForm(forms.ModelForm):
-    """
-    这个函数是用来快速生成ModelForm的
-    """
+class Bootstrap:
     def __init__(self, *args, **kwargs):
-        super(BootstrapForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for name, field in self.fields.items():
             if field.widget.attrs:
@@ -24,3 +21,11 @@ class BootstrapForm(forms.ModelForm):
                     'class': 'form-control',
                     'placeholder': field.label
                 }
+
+
+class BootstrapModelForm(Bootstrap, forms.ModelForm):
+    pass
+
+
+class BootstrapForm(Bootstrap, forms.Form):
+    pass

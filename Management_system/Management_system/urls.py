@@ -16,25 +16,25 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
-from website.views import depart, pretty, user, admin
+from django.urls import path, re_path
+from website.views import depart, pretty, user, admin, account
 
 urlpatterns = [
+    re_path(r'^$', account.login),
     # path("admin/", admin.site.urls),
     # 部门管理
-    path("depart/list/", depart.depart_list),
-    path("depart/add/", depart.depart_add),
+    path("depart/list/", depart.depart_list, name='depart_list'),
+    path("depart/add/", depart.depart_add, name='depart_add'),
     ##
     # http://127.0.0.1:8000/depart/1/edit
     # http://127.0.0.1:8000/depart/1/delete
     ##
-    path("depart/<int:nid>/delete/", depart.depart_delete),
-    path("depart/<int:nid>/edit/", depart.depart_edit),
-    path("", depart.depart_index),
+    path("depart/<int:nid>/delete/", depart.depart_delete, name='depart_delete'),
+    path("depart/<int:nid>/edit/", depart.depart_edit, name='depart_edit'),
 
     # 用户管理
-    path("user/list/", user.user_list),
-    path("user/add/", user.user_add),
+    path("user/list/", user.user_list, name="user_list"),
+    path("user/add/", user.user_add, name='user_add'),
     path("user/<int:nid>/edit/", user.user_edit, name="user_edit"),
     path("user/<int:nid>/delete/", user.user_delete, name="user_delete"),
 
@@ -49,5 +49,8 @@ urlpatterns = [
     path("admin/add/", admin.admin_add, name="admin_add"),
     path("admin/<int:nid>/edit", admin.admin_edit, name="admin_edit"),
     path("admin/<int:nid>/delete", admin.admin_delete, name="admin_delete"),
-    path("admin/<int:nid>/reset", admin.admin_reset, name="admin_reset")
+    path("admin/<int:nid>/reset", admin.admin_reset, name="admin_reset"),
+
+    # 登录
+    path("login/", account.login, name="login")
 ]

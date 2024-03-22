@@ -9,12 +9,12 @@ from website import models
 from django import forms
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from website.utils.bootstrapform import BootstrapForm
+from website.utils.bootstrap import BootstrapModelForm, BootstrapForm
 from website.utils.encrypt import md5
 
 
 # ModelForm实例
-class UserModelForm(BootstrapForm):
+class UserModelForm(BootstrapModelForm):
     # password = forms.CharField(widget=forms.PasswordInput, label='密码')
     # onboarding_time = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'date'}), label="入职时间")
 
@@ -33,7 +33,7 @@ class UserModelForm(BootstrapForm):
         # }
 
 
-class PrettyModelForm(BootstrapForm):
+class PrettyModelForm(BootstrapModelForm):
     # 手机号正则校验，方法一
     mobile = forms.CharField(
         label='手机号',
@@ -60,7 +60,7 @@ class PrettyModelForm(BootstrapForm):
 
 
 # 在定义一个modelForm
-class PrettyEditModelForm(BootstrapForm):
+class PrettyEditModelForm(BootstrapModelForm):
     # 手机号正则校验，方法一
     mobile = forms.CharField(
         label='手机号',
@@ -93,7 +93,7 @@ class PrettyEditModelForm(BootstrapForm):
         return txt_mobile
 
 
-class AdminModelForm(BootstrapForm):
+class AdminModelForm(BootstrapModelForm):
     """adminModelForm"""
     confirm_password = forms.CharField(max_length=64, label='确认密码', widget=forms.PasswordInput)
 
@@ -158,3 +158,10 @@ class AdminResetModelForm(AdminModelForm):
 
             # 返回什么，什么就保存到数据库
             return confirm_password
+
+
+class LoginForm(BootstrapForm):
+    """loginform"""
+    username = forms.CharField(required=True, max_length=32, widget=forms.TextInput(attrs={'class': "form-control"}),
+                               label="用户名")
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': "form-control"}), label="密码")

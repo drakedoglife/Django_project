@@ -164,4 +164,10 @@ class LoginForm(BootstrapForm):
     """loginform"""
     username = forms.CharField(required=True, max_length=32, widget=forms.TextInput(attrs={'class': "form-control"}),
                                label="用户名")
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': "form-control"}), label="密码")
+    password = forms.CharField(required=True,
+                               widget=forms.PasswordInput(render_value=True, attrs={'class': "form-control"}),
+                               label="密码")
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        return md5(password)

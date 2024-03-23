@@ -52,5 +52,6 @@ urlpatterns = [
     path("admin/<int:nid>/reset", admin.admin_reset, name="admin_reset"),
 
     # 登录
-    path("login/", account.login, name="login")
+    path("login/", account.login, name="login"),
+    path("logout/", account.logout, name='logout')
 ]

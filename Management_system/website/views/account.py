@@ -19,6 +19,20 @@ def login(request):
 
     if form.is_valid():
         # 验证成功
-        print(form.cleaned_data)
-        return HttpResponse("提交成功")
+        # 去数据库校验用户名密码是否正确，如果错误，获取None
+        admin_object = models.Admin.objects.filter(**form.cleaned_data).first()
+        if not admin_object:
+            form.add_error('password', '用户名或密码错误')
+            return render(request, 'login.html', {'form': form})
+
+        # 用户名和密码正确
+        # 网站生成随机字符串，写到浏览器的cookie，写到session中
+        request.session['info'] = {'id': admin_object.id, 'name': admin_object.username}
+        return redirect(reverse('admin_list'))
     return render(request, 'login.html', {'form': form})
+
+
+def logout(request):
+    """注销"""
+    request.session.clear()
+    return redirect(reverse('login'))

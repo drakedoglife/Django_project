@@ -167,6 +167,8 @@ class LoginForm(BootstrapForm):
     password = forms.CharField(required=True,
                                widget=forms.PasswordInput(render_value=True, attrs={'class': "form-control"}),
                                label="密码")
+    code = forms.CharField(label="验证码", required=True,
+                           widget=forms.TextInput(attrs={'class': "form"}))
 
     def clean_password(self):
         password = self.cleaned_data['password']

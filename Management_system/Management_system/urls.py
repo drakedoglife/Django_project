@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, re_path
-from website.views import depart, pretty, user, admin, account
+from website.views import depart, pretty, user, admin, account, task
 
 urlpatterns = [
     re_path(r'^$', account.login),
@@ -53,5 +53,10 @@ urlpatterns = [
 
     # 登录
     path("login/", account.login, name="login"),
-    path("logout/", account.logout, name='logout')
+    path("logout/", account.logout, name='logout'),
+    path("image/code/", account.image_code, name="image_code"),
+
+    # ajax页面
+    path("task/list/", task.task_list, name="task_list"),
+    path("task/ajax/", task.task_ajax, name="task_ajax")
 ]

@@ -12,7 +12,7 @@ class AuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
         # 0.排除那些不需要登录就能访问的界面
         # request.path_info 获取当前用户请求的URL
-        if request.path_info == '/login/':
+        if request.path_info in ['/login/', '/image/code/']:
             return None
 
         # 1.读取当前用户的session信息，如果能读到说明已经登录
